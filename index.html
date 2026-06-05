@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SenMarket — L'Artisanat Sénégalais Authentique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+
+<!-- NOTIFICATION BAR -->
+<div id="notifBar" class="notif-bar d-flex align-items-center justify-content-center position-relative">
+  
+  <img src="https://img.icons8.com/?size=20&id=338&format=png&color=000000" alt="">
+  <span class="notif-text">Soldes jusqu'à <strong>35% de réduction</strong> — Offre limitée !&nbsp;</span>
+  <a href="#boutique-page" class="notif-link" onclick="showPage('boutique')">Acheter maintenant <i class="bi bi-arrow-right"></i></a>
+  <button class="notif-close" onclick="document.getElementById('notifBar').remove()"><i class="bi bi-x-lg"></i></button>
+</div>
+
+<!-- HEADER / NAV -->
+<header class="site-header sticky-top bg-white border-bottom">
+  <div class="container-xxl px-4 py-3 d-flex align-items-center justify-content-between">
+    <!-- Logo -->
+    <a class="logo d-flex align-items-center gap-2 text-decoration-none" href="#" onclick="showPage('home')">
+      <div class="logo-icon d-flex align-items-center justify-content-center fw-bold text-white">SM</div>
+      <span class="logo-text">SenMarket<span class="text-sengreen">.</span></span>
+    </a>
+
+    <!-- Nav Links -->
+    <nav class="main-nav d-none d-lg-flex align-items-center gap-4">
+      <a href="#" class="nav-link active" onclick="setNav(this,'home')" data-page="home">Accueil</a>
+      <a href="#" class="nav-link" onclick="setNav(this,'boutique')" data-page="boutique">Boutique</a>
+      <a href="#" class="nav-link" onclick="setNav(this,'artisans')" data-page="artisans">Artisans</a>
+      <a href="#" class="nav-link" onclick="setNav(this,'apropos')" data-page="apropos">À Propos</a>
+      <a href="#" class="nav-link" onclick="setNav(this,'contact')" data-page="contact">Contact</a>
+    </nav>
+
+    <!-- Icons -->
+    <div class="d-flex align-items-center gap-2">
+      <button class="icon-btn" onclick="showPage('boutique')"><i class="bi bi-search"></i></button>
+      <button class="icon-btn" onclick="openLogin()"><i class="bi bi-person-circle"></i></button>
+      <button class="icon-btn position-relative" onclick="openCart()">
+        <i class="bi bi-bag"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </button>
+      <button class="icon-btn d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"><i class="bi bi-list"></i></button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="offcanvas offcanvas-end" id="mobileMenu" tabindex="-1">
+  <div class="offcanvas-header border-bottom">
+    <div class="logo d-flex align-items-center gap-2">
+      <div class="logo-icon d-flex align-items-center justify-content-center fw-bold text-white">SM</div>
+      <span class="logo-text">SenMarket<span class="text-sengreen">.</span></span>
+    </div>
+    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <nav class="d-flex flex-column gap-3 mt-2">
+      <a href="#" class="mobile-nav-link" onclick="showPage('home');bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu')).hide()">Accueil</a>
+      <a href="#" class="mobile-nav-link" onclick="showPage('boutique');bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu')).hide()">Boutique</a>
+      <a href="#" class="mobile-nav-link" onclick="showPage('artisans');bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu')).hide()">Artisans</a>
+      <a href="#" class="mobile-nav-link" onclick="showPage('apropos');bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu')).hide()">À Propos</a>
+      <a href="#" class="mobile-nav-link" onclick="showPage('contact');bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenu')).hide()">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header d-flex align-items-center justify-content-between p-4 border-bottom">
+    <h5 class="m-0 fw-semibold">Mon Panier (<span id="cartHeaderCount">0</span>)</h5>
+    <button class="icon-btn" onclick="closeCart()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="cart-body flex-grow-1 overflow-auto p-4" id="cartItems">
+    <div class="cart-empty text-center py-5">
+      <i class="bi bi-bag fs-1 text-muted opacity-50 d-block mb-3"></i>
+      <p class="fw-medium mb-1">Votre panier est vide</p>
+      <p class="text-muted small mb-4">Découvrez nos produits authentiques</p>
+      <button class="btn btn-dark rounded-3 px-4" onclick="closeCart();showPage('boutique')">Découvrir la boutique</button>
+    </div>
+  </div>
+  <div class="cart-footer p-4 border-top d-none" id="cartFooter">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="text-muted fw-medium">Total</span>
+      <span class="fs-4 fw-bold" id="cartTotal">0 FCFA</span>
+    </div>
+    <button class="btn w-100 btn-sengreen rounded-3 py-3 fw-semibold mb-2" onclick="checkout()">
+      Passer la commande <i class="bi bi-arrow-right ms-2"></i>
+    </button>
+    <button class="btn w-100 btn-outline-dark rounded-3 py-2 fw-medium" onclick="closeCart()">Continuer mes achats</button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold">Connexion</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="mb-3">
+          <label class="form-label fw-medium">Email</label>
+          <input type="email" class="form-control rounded-3" placeholder="votre@email.com" />
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-medium">Mot de passe</label>
+          <input type="password" class="form-control rounded-3" placeholder="••••••••" />
+        </div>
+        <button class="btn btn-dark w-100 rounded-3 py-2 fw-semibold mb-3">Se connecter</button>
+        <div class="divider-text text-center text-muted small mb-3">ou</div>
+        <button class="btn btn-sengreen w-100 rounded-3 py-2 fw-semibold">Créer un compte</button>
+        <p class="text-center text-muted small mt-3 mb-0">
+          Vendeur ? <a href="#" class="text-sengreen fw-medium">Espace vendeur →</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: HOME ===================== -->
+<div id="page-home" class="page-section">
+
+  <!-- HERO SECTION -->
+  <section class="hero-section py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="hero-banner position-relative rounded-4 overflow-hidden">
+        <div class="hero-bg-gradient">
+          
+        </div>
+        <div class="hero-pattern">
+
+        </div>
+        <div class="hero-content position-absolute bottom-0 start-0 p-4 p-md-5 text-white" style="max-width:560px">
+          <h1 class="hero-title display-4 fw-medium mb-3">
+            <span class="text-sengreen">L'Artisanat</span><br />
+           
+            <span class="text-yellow">Sénégalais</span><br />
+            <span class="text-danger">Authentique<span><br />
+          </h1>
+          <p class="hero-sub mb-4">Découvrez des créations uniques façonnées par des artisans talentueux du Sénégal.</p>
+          <button class="btn btn-light fw-semibold px-4 py-2 rounded-3" onclick="showPage('boutique')">Explorer la boutique</button>
+        </div>
+     
+        <div class="hero-dots position-absolute bottom-0 start-50 translate-middle-x mb-4 d-flex gap-2">
+          <div class="hero-dot hero-dot--active"></div>
+          <div class="hero-dot"></div>
+          <div class="hero-dot"></div>
+        </div>
+      </div>
+
+      <div class="row mt-5 g-4 align-items-start">
+        <div class="col-lg-6">
+          <h2 class="display-5 fw-medium text-dark lh-sm">
+            Simplement <em>Unique</em><span class="text-muted">/</span><br />
+            Simplement <em>Authentique</em><span class="text-sengreen">.</span>
+          </h2>
+        </div>
+        <div class="col-lg-6">
+          <p class="text-muted lh-lg" style="font-size:1.05rem">
+            <strong class="text-dark">SenMarket</strong> est une plateforme qui met en lumière le savoir-faire exceptionnel des artisans et producteurs sénégalais. Chaque produit raconte une histoire, chaque création est unique.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY GRID -->
+  <section class="category-section py-4 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="row g-4">
+        <!-- Left big card -->
+        <div class="col-md-6">
+          <div class="cat-card cat-card--lg position-relative rounded-3 overflow-hidden cursor-pointer" onclick="showPage('boutique')">
+            <div class="cat-bg cat-bg--1"></div>
+            <div class="cat-overlay"></div>
+            <div class="cat-content position-absolute bottom-0 start-0 p-4 text-white">
+              <h3 class="fs-2 fw-medium mb-2">Artisanat<br />Traditionnel</h3>
+              <button class="cat-btn">Découvrir <i class="bi bi-arrow-right ms-1"></i></button>
+            </div>
+          </div>
+        </div>
+        <!-- Right small cards -->
+        <div class="col-md-6 d-flex flex-column gap-4">
+          <div class="cat-card cat-card--sm position-relative rounded-3 overflow-hidden cursor-pointer" onclick="showPage('boutique')">
+            <div class="cat-bg cat-bg--2"></div>
+            <div class="cat-overlay"></div>
+            <div class="cat-content position-absolute bottom-0 start-0 p-3 text-white">
+              <h3 class="fs-4 fw-medium mb-1">Produits Alimentaires</h3>
+              <button class="cat-btn">Découvrir <i class="bi bi-arrow-right ms-1"></i></button>
+            </div>
+          </div>
+          <div class="cat-card cat-card--sm position-relative rounded-3 overflow-hidden cursor-pointer" onclick="showPage('boutique')">
+            <div class="cat-bg cat-bg--3"></div>
+            <div class="cat-overlay"></div>
+            <div class="cat-content position-absolute bottom-0 start-0 p-3 text-white">
+              <h3 class="fs-4 fw-medium mb-1">Cosmétiques Naturels</h3>
+              <button class="cat-btn">Découvrir <i class="bi bi-arrow-right ms-1"></i></button>
+            </div>f
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW PRODUCTS -->
+  <section class="products-section py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="d-flex align-items-end justify-content-between mb-5">
+        <h2 class="display-5 fw-medium lh-sm m-0">Nouveaux<br />Produits</h2>
+        <button class="underline-btn fw-medium" onclick="showPage('boutique')">Plus de produits <i class="bi bi-arrow-right"></i></button>
+      </div>
+      <div class="row g-4" id="homeProductGrid"></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section py-5 px-3 px-md-5 bg-light">
+    <div class="container-xxl">
+      <div class="row g-4">
+        <div class="col-6 col-lg-3 text-center">
+          <div class="feature-icon-wrap mx-auto mb-3"><i class="bi bi-truck fs-4 text-sengreen"></i></div>
+          <h5 class="fw-semibold mb-1">Livraison Rapide</h5>
+          <p class="text-muted small">Partout au Sénégal sous 48h</p>
+        </div>
+        <div class="col-6 col-lg-3 text-center">
+          <div class="feature-icon-wrap mx-auto mb-3"><i class="bi bi-credit-card-2-front fs-4 text-sengreen"></i></div>
+          <h5 class="fw-semibold mb-1">Paiement Sécurisé</h5>
+          <p class="text-muted small">Orange Money, Wave & CB</p>
+        </div>
+        <div class="col-6 col-lg-3 text-center">
+          <div class="feature-icon-wrap mx-auto mb-3"><i class="bi bi-shield-lock fs-4 text-sengreen"></i></div>
+          <h5 class="fw-semibold mb-1">100% Sécurisé</h5>
+          <p class="text-muted small">Protection de vos données</p>
+        </div>
+        <div class="col-6 col-lg-3 text-center">
+          <div class="feature-icon-wrap mx-auto mb-3"><i class="bi bi-headset fs-4 text-sengreen"></i></div>
+          <h5 class="fw-semibold mb-1">Support 24/7</h5>
+          <p class="text-muted small">Service client dédié</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+</div>
+<!-- END HOME -->
+
+<!-- ===================== PAGE: BOUTIQUE ===================== -->
+<div id="page-boutique" class="page-section d-none">
+  <!-- Breadcrumb Banner -->
+  <div class="page-banner py-5 px-3 px-md-5 bg-light">
+    <div class="container-xxl">
+      <p class="text-muted small mb-2">Accueil / <span class="text-dark fw-medium">Boutique</span></p>
+      <h1 class="display-5 fw-medium mb-1">Notre Boutique</h1>
+      <p class="text-muted">12 produits authentiques sénégalais</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="border-bottom bg-white py-3 px-3 px-md-5 sticky-top" style="top:65px;z-index:100">
+    <div class="container-xxl d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div class="d-flex gap-2 flex-wrap" id="boutiqueCatFilters">
+        <button class="filter-pill active" onclick="filterBoutique(this,'Tous')">Tous</button>
+        <button class="filter-pill" onclick="filterBoutique(this,'Artisanat')">Artisanat</button>
+        <button class="filter-pill" onclick="filterBoutique(this,'Alimentaire')">Alimentaire</button>
+        <button class="filter-pill" onclick="filterBoutique(this,'Cosmétiques')">Cosmétiques</button>
+      </div>
+      <div class="d-flex gap-3 align-items-center flex-wrap">
+        <div class="search-input-wrap d-flex align-items-center">
+          <i class="bi bi-search text-muted me-2"></i>
+          <input type="text" id="boutiqueSearch" class="form-control form-control-sm border-0 bg-transparent" placeholder="Rechercher..." oninput="renderBoutique()" style="width:180px" />
+        </div>
+        <select class="form-select form-select-sm border rounded-3" id="boutiqueSort" onchange="renderBoutique()" style="width:160px">
+          <option>Plus récents</option>
+          <option>Prix croissant</option>
+          <option>Prix décroissant</option>
+          <option>Mieux notés</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <section class="py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="row g-4" id="boutiqueProductGrid"></div>
+      <!-- Pagination -->
+      <div class="d-flex justify-content-center gap-2 mt-5" id="boutiquePagination"></div>
+    </div>
+  </section>
+</div>
+<!-- END BOUTIQUE -->
+
+<!-- ===================== PAGE: ARTISANS ===================== -->
+<div id="page-artisans" class="page-section d-none">
+  <!-- Hero Dark -->
+  <div class="artisans-hero py-5 px-3 px-md-5 position-relative overflow-hidden">
+    <div class="artisans-hero-pattern"></div>
+    <div class="container-xxl position-relative">
+      <p class="text-yellow text-uppercase fw-bold small mb-3" style="letter-spacing:3px">Communauté SenMarket</p>
+      <h1 class="display-4 fw-medium text-white lh-tight mb-4">Nos Artisans<br /><span class="text-yellow">&amp; Producteurs</span></h1>
+      <p class="text-light text-opacity-75 fs-5" style="max-width:480px">Derrière chaque produit se cache un artisan passionné. Découvrez les visages du savoir-faire sénégalais.</p>
+    </div>
+  </div>
+
+  <!-- Stats Band -->
+  <div class="stats-band py-4 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="row g-4">
+        <div class="col-6 col-lg-3 d-flex align-items-center gap-3">
+          <div class="stat-icon-wrap"><i class="bi bi-people-fill text-white fs-5"></i></div>
+          <div><p class="stat-value mb-0">150+</p><p class="stat-label mb-0">Artisans certifiés</p></div>
+        </div>
+        <div class="col-6 col-lg-3 d-flex align-items-center gap-3">
+          <div class="stat-icon-wrap"><i class="bi bi-globe2 text-white fs-5"></i></div>
+          <div><p class="stat-value mb-0">5</p><p class="stat-label mb-0">Régions du Sénégal</p></div>
+        </div>
+        <div class="col-6 col-lg-3 d-flex align-items-center gap-3">
+          <div class="stat-icon-wrap"><i class="bi bi-bag-fill text-white fs-5"></i></div>
+          <div><p class="stat-value mb-0">500+</p><p class="stat-label mb-0">Produits disponibles</p></div>
+        </div>
+        <div class="col-6 col-lg-3 d-flex align-items-center gap-3">
+          <div class="stat-icon-wrap"><i class="bi bi-star-fill text-white fs-5"></i></div>
+          <div><p class="stat-value mb-0">98%</p><p class="stat-label mb-0">Satisfaction client</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Artisan Filters -->
+  <div class="py-4 px-3 px-md-5 border-bottom bg-white">
+    <div class="container-xxl d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div class="d-flex gap-2 flex-wrap" id="artisanCatFilters">
+        <button class="filter-pill active" onclick="filterArtisans(this,'Tous')">Tous</button>
+        <button class="filter-pill" onclick="filterArtisans(this,'Artisanat')">Artisanat</button>
+        <button class="filter-pill" onclick="filterArtisans(this,'Alimentaire')">Alimentaire</button>
+        <button class="filter-pill" onclick="filterArtisans(this,'Cosmétiques')">Cosmétiques</button>
+      </div>
+      <div class="search-input-wrap d-flex align-items-center">
+        <i class="bi bi-search text-muted me-2"></i>
+        <input type="text" id="artisanSearch" class="form-control form-control-sm border-0 bg-transparent" placeholder="Chercher un artisan..." oninput="renderArtisans()" style="width:200px" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Artisans Grid -->
+  <section class="py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="row g-4" id="artisansGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA Join -->
+  <div class="artisan-cta py-5 px-3 px-md-5 text-center">
+    <div class="container-xxl" style="max-width:600px">
+      <h2 class="display-6 fw-medium mb-3">Vous êtes artisan ?</h2>
+      <p class="text-muted mb-4 fs-5">Rejoignez notre communauté et vendez vos créations à des acheteurs locaux et internationaux.</p>
+      <button class="btn btn-sengreen px-5 py-3 fw-semibold rounded-3 me-3" onclick="showPage('contact')">Nous rejoindre</button>
+      <button class="btn btn-outline-dark px-5 py-3 fw-semibold rounded-3" onclick="showPage('apropos')">En savoir plus</button>
+    </div>
+  </div>
+</div>
+<!-- END ARTISANS -->
+
+<!-- ===================== PAGE: À PROPOS ===================== -->
+<div id="page-apropos" class="page-section d-none">
+  <!-- Hero -->
+  <section class="py-5 py-md-6 px-3 px-md-5">
+    <div class="container-xxl" style="max-width:900px">
+      <p class="text-sengreen text-uppercase fw-bold small mb-4" style="letter-spacing:3px">Notre Histoire</p>
+      <h1 class="display-4 fw-medium lh-tight mb-4">
+        Valoriser le talent<br />des artisans<br />
+        <span class="text-sengreen">sénégalais</span><span class="text-danger">.</span>
+      </h1>
+      <p class="text-muted fs-5 lh-lg" style="max-width:640px">SenMarket est né d'une conviction : le savoir-faire sénégalais mérite une vitrine mondiale. Depuis 2022, nous connectons artisans locaux et acheteurs du monde entier.</p>
+    </div>
+  </section>
+
+  <!-- Stats Dark Band -->
+  <div class="dark-band py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="row g-4 text-center">
+        <div class="col-6 col-lg-3">
+          <p class="display-5 fw-bold text-yellow mb-1">500+</p>
+          <p class="text-light text-opacity-75 small">Produits artisanaux</p>
+        </div>
+        <div class="col-6 col-lg-3">
+          <p class="display-5 fw-bold text-yellow mb-1">150+</p>
+          <p class="text-light text-opacity-75 small">Artisans partenaires</p>
+        </div>
+        <div class="col-6 col-lg-3">
+          <p class="display-5 fw-bold text-yellow mb-1">15 000+</p>
+          <p class="text-light text-opacity-75 small">Clients satisfaits</p>
+        </div>
+        <div class="col-6 col-lg-3">
+          <p class="display-5 fw-bold text-yellow mb-1">12</p>
+          <p class="text-light text-opacity-75 small">Pays livrés</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Values -->
+  <section class="py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <h2 class="display-6 fw-medium text-center mb-5">Nos Valeurs</h2>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card p-4 rounded-4 h-100">
+            <div class="value-icon mb-3" style="background:#008751">
+              <i class="bi bi-leaf-fill text-white fs-5"></i>
+            </div>
+            <h5 class="fw-semibold mb-2">Authenticité</h5>
+            <p class="text-muted small lh-lg">Nous sélectionnons uniquement des produits 100% authentiques, façonnés selon des traditions séculaires.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card p-4 rounded-4 h-100">
+            <div class="value-icon mb-3" style="background:#CE1126">
+              <i class="bi bi-heart-fill text-white fs-5"></i>
+            </div>
+            <h5 class="fw-semibold mb-2">Impact Social</h5>
+            <p class="text-muted small lh-lg">Chaque achat soutient directement une famille d'artisan sénégalais et contribue au développement local.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card p-4 rounded-4 h-100">
+            <div class="value-icon mb-3" style="background:#0284C7">
+              <i class="bi bi-globe2 text-white fs-5"></i>
+            </div>
+            <h5 class="fw-semibold mb-2">Rayonnement Mondial</h5>
+            <p class="text-muted small lh-lg">Nous portons le savoir-faire sénégalais aux quatre coins du monde, en connectant artisans et acheteurs.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card p-4 rounded-4 h-100">
+            <div class="value-icon mb-3" style="background:#7C3AED">
+              <i class="bi bi-patch-check-fill text-white fs-5"></i>
+            </div>
+            <h5 class="fw-semibold mb-2">Qualité Garantie</h5>
+            <p class="text-muted small lh-lg">Chaque produit est vérifié et certifié avant mise en vente. Notre engagement : vous satisfaire à 100%.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="py-5 px-3 px-md-5 bg-light">
+    <div class="container-xxl" style="max-width:800px">
+      <h2 class="display-6 fw-medium text-center mb-5">Notre Parcours</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2022</div>
+          <div class="timeline-content">
+            <h5 class="fw-semibold">Fondation</h5>
+            <p class="text-muted small">SenMarket voit le jour à Dakar avec 12 artisans pionniers et une vision commune.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2023</div>
+          <div class="timeline-content">
+            <h5 class="fw-semibold">Expansion</h5>
+            <p class="text-muted small">La plateforme s'étend à 5 régions du Sénégal et franchit les 5 000 clients.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2024</div>
+          <div class="timeline-content">
+            <h5 class="fw-semibold">International</h5>
+            <p class="text-muted small">Premiers envois en Europe et en Amérique du Nord. 100+ artisans partenaires.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2026</div>
+          <div class="timeline-content">
+            <h5 class="fw-semibold">Aujourd'hui</h5>
+            <p class="text-muted small">Plus de 150 artisans, 12 pays livrés, et une communauté qui ne cesse de grandir.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <h2 class="display-6 fw-medium text-center mb-5">Notre Équipe</h2>
+      <div class="row g-4 justify-content-center">
+        <div class="col-6 col-lg-3 text-center">
+          <div class="team-avatar mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold text-white fs-4" style="background:#008751">CD</div>
+          <h6 class="fw-semibold mb-1">Serigne Talla Fall</h6>
+          <p class="text-muted small">Co-fondateur & CEO</p>
+        </div>
+        <div class="col-6 col-lg-3 text-center">
+          <div class="team-avatar mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold text-white fs-4" style="background:rgb(239, 239, 79)">AS</div>
+          <h6 class="fw-semibold mb-1">Aminata Ndoye</h6>
+          <p class="text-muted small">Directrice des Artisans</p>
+        </div>
+        <div class="col-6 col-lg-3 text-center">
+          <div class="team-avatar mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold text-white fs-4" style="background:red">OF</div>
+          <h6 class="fw-semibold mb-1">Patrick Mendes</h6>
+          <p class="text-muted small">Directeur Technique</p>
+        </div>
+        
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-6 col-lg-3 text-center">
+          <div class="team-avatar mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold text-white fs-4" style="background:#0284C7">CD</div>
+          <h6 class="fw-semibold mb-1">Diariyatou Ba Diallo</h6>
+          <p class="text-muted small">Co-fondateur & CEO</p>
+        </div>
+        <div class="col-6 col-lg-3 text-center">
+          <div class="team-avatar mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold text-white fs-4" style="background:gray">AS</div>
+          <h6 class="fw-semibold mb-1">Ndeye Salla Niass</h6>
+          <p class="text-muted small">Directrice des Artisans</p>
+        </div>
+        <div class="col-6 col-lg-3 text-center">
+          <div class="team-avatar mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold text-white fs-4" style="background:maroon">OF</div>
+          <h6 class="fw-semibold mb-1">Coumba Sall</h6>
+          <p class="text-muted small">Directeur Technique</p>
+        </div>
+     
+    </div>
+  </section>
+</div>
+<!-- END À PROPOS -->
+
+<!-- ===================== PAGE: CONTACT ===================== -->
+<div id="page-contact" class="page-section d-none">
+  <div class="page-banner py-5 px-3 px-md-5 bg-light">
+    <div class="container-xxl">
+      <p class="text-muted small mb-2">Accueil / <span class="text-dark fw-medium">Contact</span></p>
+      <h1 class="display-5 fw-medium mb-1">Contactez-nous</h1>
+      <p class="text-muted">Notre équipe répond en moins de 24h</p>
+    </div>
+  </div>
+
+  <section class="py-5 px-3 px-md-5">
+    <div class="container-xxl">
+      <div class="row g-5">
+        <!-- Form -->
+        <div class="col-lg-7">
+          <h3 class="fw-semibold mb-4">Envoyer un message</h3>
+          <div id="contactSuccess" class="alert alert-success d-none mb-4 rounded-3">
+            <i class="bi bi-check-circle-fill me-2"></i>Message envoyé avec succès ! Nous vous répondrons sous 24h.
+          </div>
+          <form onsubmit="handleContact(event)">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <label class="form-label fw-medium">Nom complet *</label>
+                <input type="text" class="form-control rounded-3" required placeholder="Votre nom" />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-medium">Email *</label>
+                <input type="email" class="form-control rounded-3" required placeholder="votre@email.com" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium">Sujet</label>
+              <select class="form-select rounded-3">
+                <option>Question sur une commande</option>
+                <option>Devenir vendeur</option>
+                <option>Problème technique</option>
+                <option>Partenariat</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-medium">Message *</label>
+              <textarea class="form-control rounded-3" rows="5" required placeholder="Votre message..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-sengreen px-5 py-3 rounded-3 fw-semibold">
+              <i class="bi bi-send me-2"></i>Envoyer
+            </button>
+          </form>
+        </div>
+
+        <!-- Info -->
+        <div class="col-lg-5">
+          <h3 class="fw-semibold mb-4">Informations</h3>
+          <div class="d-flex flex-column gap-4 mb-5">
+            <div class="d-flex gap-3">
+              <div class="contact-info-icon"><i class="bi bi-geo-alt-fill text-sengreen"></i></div>
+              <div><p class="fw-semibold mb-0">Adresse</p><p class="text-muted small">Plateau, Dakar, Sénégal<br />BP 12345</p></div>
+            </div>
+            <div class="d-flex gap-3">
+              <div class="contact-info-icon"><i class="bi bi-telephone-fill text-sengreen"></i></div>
+              <div><p class="fw-semibold mb-0">Téléphone</p><p class="text-muted small">+221 33 000 00 00<br />+221 77 000 00 00</p></div>
+            </div>
+            <div class="d-flex gap-3">
+              <div class="contact-info-icon"><i class="bi bi-envelope-fill text-sengreen"></i></div>
+              <div><p class="fw-semibold mb-0">Email</p><p class="text-muted small">contact@senmarket.sn<br />support@senmarket.sn</p></div>
+            </div>
+            <div class="d-flex gap-3">
+              <div class="contact-info-icon"><i class="bi bi-clock-fill text-sengreen"></i></div>
+              <div><p class="fw-semibold mb-0">Horaires</p><p class="text-muted small">Lun–Ven : 8h–18h<br />Samedi : 9h–14h</p></div>
+            </div>
+          </div>
+
+          <!-- FAQ -->
+        
+          
+         
+        
+
+          
+          </div>
+
+        </div>
+
+        
+      </div>
+   
+         <h4 class="fw-semibold mb-3 position-relative" style="text-align: center;">Questions Fréquentes</h4>
+            <div class="accordion accordion-flush" mb-3 id="faqAccordion" style="justify-content: center; display: block; position: relative; width: 400px;">
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+              <h2 class="accordion-header"><button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">Comment passer une commande ?</button></h2>
+              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-muted small">Parcourez notre catalogue, ajoutez vos produits au panier et finalisez via notre système de paiement sécurisé (Orange Money, Wave ou carte bancaire).</div>
+              </div>
+            </div>
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+              <h2 class="accordion-header"><button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">Quels modes de paiement acceptés ?</button></h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-muted small">Orange Money, Wave, cartes Visa/Mastercard et paiement à la livraison pour les commandes au Sénégal.</div>
+              </div>
+            </div>
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+              <h2 class="accordion-header"><button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">Délais de livraison ?</button></h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-muted small">48h au Sénégal, 5–7 jours pour l'Afrique de l'Ouest, 10–15 jours pour l'international.</div>
+              </div>
+            </div>
+            <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+              <h2 class="accordion-header"><button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">Comment devenir vendeur ?</button></h2>
+              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-muted small">Remplissez le formulaire d'inscription vendeur, fournissez vos documents et présentez vos produits. Notre équipe vous contacte sous 48h.</div>
+              </div>
+            </div>
+          </div>
+      
+
+
+    </div>
+    
+  </section>
+</div>
+<!-- END CONTACT -->
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer py-5 px-3 px-md-5">
+  <div class="container-xxl">
+    <div class="row g-5 mb-5">
+      <!-- Brand -->
+      <div class="col-lg-3">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <div class="logo-icon d-flex align-items-center justify-content-center fw-bold text-white">SM</div>
+          <span class="fw-medium fs-5 text-white">SenMarket<span class="text-yellow">.</span></span>
+        </div>
+        <p class="text-white small lh-lg mb-4">Plateforme de mise en relation entre artisans sénégalais et acheteurs du monde entier.</p>
+        <div class="d-flex gap-2">
+          <a href="#" class="footer-social"><i class="bi bi-facebook"></i></a>
+          <a href="https://github.com/serignetallafall/SenMarket.git" class="footer-social"><i class="bi bi-github"></i></a>
+          <a href="https://trello.com/invite/b/69fdd3b39188517cc1ef8a22/ATTI2cc11ab1eab74d6d4ac8aa8eafe34a7cBA565641/cheminement-de-notre-projet" class="footer-social"><i class="bi bi-trello"></i></a>
+          <a href="https://www.youtube.com/@SCADTdeveloppers-y6c" class="footer-social"><i class="bi bi-youtube"></i></a>
+          <a href="https://www.tiktok.com/@scadt.developers" class="footer-social"><i class="bi bi-tiktok"></i></a>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="col-6 col-lg-2">
+        <h6 class="text-white fw-semibold mb-3">Navigation</h6>
+        <ul class="list-unstyled m-0">
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('home')">Accueil</a></li>
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('boutique')">Boutique</a></li>
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('artisans')">Artisans</a></li>
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('apropos')">À Propos</a></li>
+          <li><a href="#" class="footer-link" onclick="showPage('contact')">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Categories -->
+      <div class="col-6 col-lg-2">
+        <h6 class="text-white fw-semibold mb-3">Catégories</h6>
+        <ul class="list-unstyled m-0">
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('boutique')">Artisanat Traditionnel</a></li>
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('boutique')">Produits Alimentaires</a></li>
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('boutique')">Cosmétiques Naturels</a></li>
+          <li><a href="#" class="footer-link" onclick="showPage('boutique')">Décoration</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div class="col-6 col-lg-2">
+        <h6 class="text-white fw-semibold mb-3">Support</h6>
+        <ul class="list-unstyled m-0">
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('contact')">Service Client</a></li>
+          <li class="mb-2"><a href="#" class="footer-link" onclick="showPage('contact')">FAQ</a></li>
+          <li class="mb-2"><a href="#" class="footer-link">Livraison & Retours</a></li>
+          <li><a href="#" class="footer-link">Politique de Confidentialité</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="col-8 col-lg-3">
+        <h6 class="text-white fw-semibold mb-3">Newsletter</h6>
+        <a href="#" class="footer-link small">Recevez nos dernières offres et nouveautés</a>
+        <p class="text-muted small mb-3"></p>
+        <form onsubmit="handleNewsletter(event)" class="d-flex gap-2">
+          <input type="email" class="form-control form-control-sm bg-muted border-secondary text-white rounded-3" placeholder="Entrer votre e-mail" required style="color:#111010!important; font-style: italic;" />
+          <button type="submit" class="btn btn-sengreen btn-sm rounded-3 px-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail w-5 h-5"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></button>
+        </form>
+       
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="border-top border-secondary pt-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <a href="#" class="footer-link small">Copyright © 2026 SenMarket. Tous droits réservés</a>
+      <p class="text-white small mb-0"></p>
+      <div class="d-flex gap-3">
+        <a href="#" class="footer-link small">Politique de Confidentialité</a>
+        <a href="#" class="footer-link small">Conditions d'utilisation</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="mainToast" class="toast align-items-center text-white border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMsg"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
