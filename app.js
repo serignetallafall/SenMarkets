@@ -17,7 +17,7 @@ const PRODUCTS = [
   { id:9,  name:"Savon au Lait de Karité",       category:"Cosmétiques",  price:2800,                                         rating:5, reviews:312, artisan:"Coumba M.", isNew:true,  emoji:"🧼" , image:"images/Cosmétiques/ Savon_au_Lait_de_Karité.jpg"},
   { id:10, name:"Bogolan Tissu Authentique",     category:"Artisanat",    price:22000,                                        rating:5, reviews:38,  artisan:"Moussa K.",              emoji:"🎭", image:"images/Artisanat/Bogolan_Tissu_Authentique.jpg"},
   { id:11, name:"Jus de Bissap Premium",         category:"Alimentaire",  price:3500,                                         rating:4, reviews:167, artisan:"Soda T.",                emoji:"🥤", image:"images/Alimentaire/Jus_de_Bissap_Premium.jpg" },
-  { id:12, name:"Collier Cauris Traditionnel",   category:"Artisanat",    price:6500,  originalPrice:9000,  discount:"-28%", rating:5, reviews:52,  artisan:"Khadija B.",             emoji:"📿" ,image:"images/Artisanat/collier_cauris.jpg"},
+  { id:12, name:"Collier Cauris Traditionnel",   category:"Artisanat",    price:6500,  originalPrice:9000,  discount:"-28%", rating:5, reviews:52,  artisan:"Khadija B.",             emoji:"📿" , image:"images/Artisanat/colier_coris.jpg"},
 ];
 
 const ARTISANS = [
