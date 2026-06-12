@@ -126,12 +126,17 @@ if ($action === 'add') {
         $current_qty = isset($_SESSION['cart'][$product_id]['quantity']) ? intval($_SESSION['cart'][$product_id]['quantity']) : 0;
         $new_qty = min($current_qty + $quantity, intval($product['stock']));
 
+        // Sanitize image path: only allow paths starting with images/ and safe chars
+        $raw_image = isset($_POST['image']) ? urldecode($_POST['image']) : '';
+        $safe_image = (preg_match('/^images\/[\w\s\-\.\'\/\(\)\xC0-\xFF]+\.(jpg|jpeg|png|webp)$/ui', $raw_image)) ? $raw_image : '';
+
         $_SESSION['cart'][$product_id] = array(
             'id'             => intval($product['id']),
             'name'           => $product['name'],
             'price'          => intval($product['price']),
             'original_price' => !empty($product['original_price']) ? intval($product['original_price']) : null,
             'emoji'          => $product['emoji'],
+            'image'          => $safe_image,
             'artisan'        => $product['artisan'],
             'quantity'       => $new_qty,
             'stock'          => intval($product['stock']),
