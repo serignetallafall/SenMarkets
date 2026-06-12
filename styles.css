@@ -1,9 +1,3 @@
-/* ============================================================
-   SENMARKET — Styles
-   Colors: #008751 (vert sénégal), #CE1126 (rouge), #FDEF42 (jaune)
-   Typography: Poppins (headings), Inter (body)
-   ============================================================ */
-
 :root {
   --sen-green: #008751;
   --sen-red: #CE1126;
@@ -323,4 +317,5 @@ h1, h2, h3, h4, h5, .logo-text, .hero-title { font-family: 'Poppins', sans-serif
   .hero-title { font-size: 2rem; }
   .cat-card--lg { height: 300px; }
   .cat-card--sm { height: 180px; }
+  
 }
