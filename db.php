@@ -1,10 +1,4 @@
 <?php
-/**
- * cart.php — API JSON du panier SenMarket
- * - ob_start() en tout premier (évite "headers already sent")
- * - session_start() avant header()
- * - Erreurs PHP retournées en JSON propre
- */
 
 ob_start();
 

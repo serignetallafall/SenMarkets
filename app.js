@@ -6,18 +6,18 @@
 
 // ── DATA ──────────────────────────────────────────────────────
 const PRODUCTS = [
-  { id:1,  name:"Panier Tressé Traditionnel",  category:"Artisanat",    price:15000, originalPrice:25000, discount:"-40%", rating:5, reviews:128, artisan:"Aminata D.", isNew:true,  emoji:"🧺", image:"images/Artisanat/Panier_tressé.jpg" },
-  { id:2,  name:"Bijoux en Perles Artisanaux",  category:"Artisanat",    price:8500,                                        rating:4, reviews:89,  artisan:"Fatou S.",   isNew:true, emoji:"💎", image:"images/Artisanat/Bijoux_en_perle.jpg" },
-  { id:3,  name:"Beurre de Karité Pur",          category:"Cosmétiques",  price:12000, originalPrice:16000, discount:"-25%", rating:5, reviews:203, artisan:"Mariama B.",            emoji:"🧴", image:"images/Cosmétiques/Beurre_de_Karité.jpg" },
-  { id:4,  name:"Tissu Wax Premium",             category:"Artisanat",    price:18000,                                        rating:4, reviews:67,  artisan:"Oumar T.",   isNew:true,  emoji:"🎨", image:"images/Artisanat/Tissu_wax.jpg"},
-  { id:5,  name:"Épices Thiéboudienne",          category:"Alimentaire",  price:4500,                                         rating:5, reviews:156, artisan:"Rokhaya N.",             emoji:"🌶️", image:"images/Alimentaire/Epices_Thiéboudienne.jpg"},
-  { id:6,  name:"Huile d'Argan Artisanale",      category:"Cosmétiques",  price:9800,  originalPrice:13000, discount:"-25%", rating:4, reviews:94,  artisan:"Aissatou D.",            emoji:"🫙" , image:"images/Cosmétiques/Huile_d'argan_artisanale.jpg"},
-  { id:7,  name:"Chapeau Tressé Baobab",         category:"Artisanat",    price:7200,                                         rating:5, reviews:45,  artisan:"Ibrahima S.",            emoji:"👒", image:"images/Artisanat/Chapeau_tressé.jpg" },
-  { id:8,  name:"Mélange d'Épices Yassa",        category:"Alimentaire",  price:3200,                                         rating:4, reviews:78,  artisan:"Ndèye F.",               emoji:"🌿", image:"images/Alimentaire/Mélange_d'épices_yassa.jpg "},
-  { id:9,  name:"Savon au Lait de Karité",       category:"Cosmétiques",  price:2800,                                         rating:5, reviews:312, artisan:"Coumba M.", isNew:true,  emoji:"🧼" , image:"images/Cosmétiques/Savon_au_lait_de_karité.jpg"},
-  { id:10, name:"Bogolan Tissu Authentique",     category:"Artisanat",    price:22000,                                        rating:5, reviews:38,  artisan:"Moussa K.",              emoji:"🎭", image:"images/Artisanat/Bogolan_tissu.jpg"},
-  { id:11, name:"Jus de Bissap Premium",         category:"Alimentaire",  price:3500,                                         rating:4, reviews:167, artisan:"Soda T.",                emoji:"🥤", image:"images/Alimentaire/Jus_bissap.jpg" },
-  { id:12, name:"Collier Cauris Traditionnel",   category:"Artisanat",    price:6500,  originalPrice:9000,  discount:"-28%", rating:5, reviews:52,  artisan:"Khadija B.",             emoji:"📿" , image:"images/Artisanat/Collier_cauris.jpg"},
+  { id:1,  name:"Panier Tressé Traditionnel",  category:"Artisanat",    price:15000, originalPrice:25000, discount:"-40%", rating:5, reviews:128, artisan:"Aminata D.", isNew:true,  image:"images/Artisanat/Panier_tressé.jpg" },
+  { id:2,  name:"Bijoux en Perles Artisanaux",  category:"Artisanat",    price:8500,                                        rating:4, reviews:89,  artisan:"Fatou S.",   isNew:true,  image:"images/Artisanat/Bijoux_en_perle.jpg" },
+  { id:3,  name:"Beurre de Karité Pur",          category:"Cosmétiques",  price:12000, originalPrice:16000, discount:"-25%", rating:5, reviews:203, artisan:"Mariama B.",             image:"images/Cosmétiques/Beurre_de_karité.jpg" },
+  { id:4,  name:"Tissu Wax Premium",             category:"Artisanat",    price:18000,                                        rating:4, reviews:67,  artisan:"Oumar T.",   isNew:true,  image:"images/Artisanat/Tissu_wax.jpg"},
+  { id:5,  name:"Épices Thiéboudienne",          category:"Alimentaire",  price:4500,                                         rating:5, reviews:156, artisan:"Rokhaya N.",              image:"images/Alimentaire/Epices_thiéboudienne.jpg"},
+  { id:6,  name:"Huile d'Argan Artisanale",      category:"Cosmétiques",  price:9800,  originalPrice:13000, discount:"-25%", rating:4, reviews:94,  artisan:"Aissatou D.",             image:"images/Cosmétiques/Huile_d'argan_artisanale.jpg"},
+  { id:7,  name:"Chapeau Tressé Baobab",         category:"Artisanat",    price:7200,                                         rating:5, reviews:45,  artisan:"Ibrahima S.",             image:"images/Artisanat/Chapeau_tressé.jpg" },
+  { id:8,  name:"Mélange d'Épices Yassa",        category:"Alimentaire",  price:3200,                                         rating:4, reviews:78,  artisan:"Ndèye F.",                image:"images/Alimentaire/mélange_d'épices_yassa.jpg"},
+  { id:9,  name:"Savon au Lait de Karité",       category:"Cosmétiques",  price:2800,                                         rating:5, reviews:312, artisan:"Coumba M.", isNew:true,   image:"images/Cosmétiques/Savon_au_lait_de_karité.jpg"},
+  { id:10, name:"Bogolan Tissu Authentique",     category:"Artisanat",    price:22000,                                        rating:5, reviews:38,  artisan:"Moussa K.",               image:"images/Artisanat/Bogolan_tissu.jpg"},
+  { id:11, name:"Jus de Bissap Premium",         category:"Alimentaire",  price:3500,                                         rating:4, reviews:167, artisan:"Soda T.",                 image:"images/Alimentaire/Jus_bissap.jpg" },
+  { id:12, name:"Collier Cauris Traditionnel",   category:"Artisanat",    price:6500,  originalPrice:9000,  discount:"-28%", rating:5, reviews:52,  artisan:"Khadija B.",              image:"images/Artisanat/Collier_cauris.jpg"},
 ];
 
 const ARTISANS = [
@@ -71,7 +71,11 @@ function addToCart(productId, e) {
   fetch('cart.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `action=add&product_id=${productId}&quantity=1`
+    body: (() => {
+      const p = PRODUCTS.find(x => x.id === productId);
+      const img = p ? encodeURIComponent(p.image) : '';
+      return `action=add&product_id=${productId}&quantity=1&image=${img}`;
+    })()
   })
   .then(r => r.json())
   .then(data => {
@@ -79,7 +83,7 @@ function addToCart(productId, e) {
     // Sync state local avec réponse serveur
     cart = Object.values(data.cart);
     updateCartUIFromServer(data.count, data.total);
-    showToast(`${data.cart[productId]?.emoji ?? '🛍️'} "${data.cart[productId]?.name}" ajouté au panier !`, 'success');
+    showToast(`🛍️ "${data.cart[productId]?.name}" ajouté au panier !`, 'success');
   })
   .catch(() => showToast('Erreur réseau. Réessayez.'));
 }
@@ -165,8 +169,8 @@ function renderCartItems() {
   footer.classList.remove('d-none');
   container.innerHTML = cart.map(item => `
     <div class="d-flex gap-3 mb-3 p-3 rounded-3" style="background:#f3f5f7">
-      <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0"
-           style="width:72px;height:72px;background:#e8ecef;font-size:2rem">${item.emoji}</div>
+      <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0 overflow-hidden"
+           style="width:72px;height:72px;background:#e8ecef"><img src="${item.image}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover"></div>
       <div class="flex-grow-1 min-width-0">
         <p class="fw-medium mb-1 small text-truncate">${item.name}</p>
         <p class="fw-semibold mb-2 small" style="color:#008751">${item.price.toLocaleString('fr-FR')} FCFA</p>
@@ -240,8 +244,8 @@ function buildProductCard(p, size = 'col-6 col-md-4 col-lg-3') {
   style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;"
   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
 />
-          <div style="width:100%;height:100%;background:linear-gradient(135deg,#f3f5f7,#e8ecef);display:flex;align-items:center;justify-content:center;font-size:4.5rem;border-radius:12px">
-            ${p.image}
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#f3f5f7,#e8ecef);display:none;align-items:center;justify-content:center;border-radius:12px">
+            <i class="bi bi-image text-muted" style="font-size:3rem"></i>
           </div>
           <div class="product-badges">
             ${p.isNew ? '<span class="badge-new">Nouveau</span>' : ''}
@@ -408,8 +412,8 @@ function showProductDetail(id) {
         <div class="modal-body p-0">
           <div class="row g-0">
             <div class="col-md-5">
-              <div class="d-flex align-items-center justify-content-center rounded-start" style="height:360px;background:linear-gradient(135deg,#f3f5f7,#e8ecef);font-size:7rem">
-                ${p.emoji}
+              <div class="rounded-start overflow-hidden" style="height:360px">
+                <img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">
               </div>
             </div>
             <div class="col-md-7 p-4 p-md-5">

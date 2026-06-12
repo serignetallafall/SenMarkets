@@ -299,7 +299,7 @@ foreach ($cart as $item) {
     .step-sep { color:rgba(255,255,255,.2); }
 
     .cart-item { background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #e8ecef; }
-    .cart-item-emoji { width:72px;height:72px;background:#f3f5f7;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0; }
+    .cart-item-emoji { width:72px;height:72px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden; }
     .qty-control { display:flex;align-items:center;gap:8px;background:#f3f5f7;border-radius:8px;padding:4px 10px; }
     .qty-btn { width:28px;height:28px;border:none;background:transparent;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background .2s; }
     .qty-btn:hover { background:#e0e0e0; }
@@ -388,7 +388,12 @@ foreach ($cart as $item) {
           <p class="fw-semibold small mb-2">Récapitulatif :</p>
           <?php foreach ($order['items'] as $item): ?>
             <div class="d-flex justify-content-between small py-1 border-bottom">
-              <span><?= htmlspecialchars($item['emoji'] ?? '📦') ?> <?= htmlspecialchars($item['name']) ?> × <?= $item['quantity'] ?></span>
+              <span>
+                <?php if (!empty($item['image'])): ?>
+                  <img src="<?= htmlspecialchars($item['image']) ?>" alt="" style="width:28px;height:28px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:4px;">
+                <?php endif; ?>
+                <?= htmlspecialchars($item['name']) ?> × <?= $item['quantity'] ?>
+              </span>
               <span class="fw-medium"><?= fmt($item['price'] * $item['quantity']) ?></span>
             </div>
           <?php endforeach; ?>
@@ -446,7 +451,13 @@ foreach ($cart as $item) {
 
         <?php foreach ($cart as $id => $item): ?>
           <div class="cart-item d-flex gap-3 align-items-start" id="item-<?= $id ?>">
-            <div class="cart-item-emoji"><?= htmlspecialchars($item['emoji'] ?? '📦') ?></div>
+            <div class="cart-item-emoji overflow-hidden" style="background:#f3f5f7;border-radius:10px;flex-shrink:0;">
+              <?php if (!empty($item['image'])): ?>
+                <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="width:100%;height:100%;object-fit:cover;">
+              <?php else: ?>
+                <i class="bi bi-image text-muted" style="font-size:1.8rem"></i>
+              <?php endif; ?>
+            </div>
             <div class="flex-grow-1">
               <div class="d-flex justify-content-between align-items-start mb-1">
                 <p class="fw-semibold mb-0" style="font-size:.95rem"><?= htmlspecialchars($item['name']) ?></p>
@@ -546,10 +557,10 @@ foreach ($cart as $item) {
           <div class="row g-3">
             <?php
             $payments = [
-              'orange_money' => ['icon'=>'📱', 'label'=>'Orange Money', 'sub'=>'Paiement mobile sécurisé', 'bg'=>'#FF6600'],
-              'wave' => ['icon'=>'🌊', 'label'=>'Wave', 'sub'=>'Transfert instantané', 'bg'=>'#1A73E8'],
-              'card' => ['icon'=>'💳', 'label'=>'Carte bancaire', 'sub'=>'Visa, Mastercard', 'bg'=>'#2D3748'],
-              'cash' => ['icon'=>'💵', 'label'=>'Paiement à la livraison', 'sub'=>'Sénégal uniquement', 'bg'=>'#008751'],
+              'orange_money' => ['img'=>'images/orange_money.png',  'label'=>'Orange Money',           'sub'=>'Paiement mobile sécurisé', 'bg'=>'#FF6600'],
+              'wave'         => ['img'=>'images/wave.png',          'label'=>'Wave',                   'sub'=>'Transfert instantané',     'bg'=>'#00BFFF'],
+              'card'         => ['img'=>'images/carte_bancaire.webp','label'=>'Carte bancaire',          'sub'=>'Visa, Mastercard',         'bg'=>'#2D3748'],
+              'cash'         => ['img'=>'images/livraison.jpeg',    'label'=>'Paiement à la livraison','sub'=>'Sénégal uniquement',        'bg'=>'#008751'],
             ];
             foreach ($payments as $value => $p):
               $checked = ($_POST['payment_method'] ?? 'orange_money') === $value ? 'checked' : '';
@@ -558,8 +569,8 @@ foreach ($cart as $item) {
                 <label style="cursor:pointer;display:block">
                   <input type="radio" name="payment_method" value="<?= $value ?>" class="d-none" <?= $checked ?> required />
                   <div class="payment-option">
-                    <div class="payment-icon" style="background:<?= $p['bg'] ?>20">
-                      <span style="font-size:1.3rem"><?= $p['icon'] ?></span>
+                    <div class="payment-icon" style="background:<?= $p['bg'] ?>20;overflow:hidden;padding:4px;">
+                      <img src="<?= $p['img'] ?>" alt="<?= $p['label'] ?>" style="width:100%;height:100%;object-fit:contain;">
                     </div>
                     <div>
                       <p class="payment-label mb-0"><?= $p['label'] ?></p>
@@ -590,7 +601,12 @@ foreach ($cart as $item) {
 
         <?php foreach ($cart as $item): ?>
           <div class="summary-row">
-            <span class="small"><?= htmlspecialchars($item['emoji'] ?? '📦') ?> <?= htmlspecialchars(mb_strimwidth($item['name'], 0, 30, '…')) ?> ×<?= $item['quantity'] ?></span>
+            <span class="small d-flex align-items-center gap-1">
+              <?php if (!empty($item['image'])): ?>
+                <img src="<?= htmlspecialchars($item['image']) ?>" alt="" style="width:22px;height:22px;object-fit:cover;border-radius:3px;flex-shrink:0;">
+              <?php endif; ?>
+              <?= htmlspecialchars(mb_strimwidth($item['name'], 0, 30, '…')) ?> ×<?= $item['quantity'] ?>
+            </span>
             <span class="small fw-medium"><?= fmt($item['price'] * $item['quantity']) ?></span>
           </div>
         <?php endforeach; ?>
