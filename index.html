@@ -101,28 +101,148 @@
 </div>
 
 <!-- LOGIN MODAL -->
-<div class="modal fade" id="loginModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg">
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title fw-bold">Connexion</h5>
-        <button class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:430px">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+      <!-- Onglets Connexion / Inscription -->
+      <div class="modal-header border-0 pb-0 px-4 pt-4" id="authTabsHeader">
+        <div class="d-flex gap-2 w-100">
+          <button id="tabLoginBtn" class="btn flex-fill fw-semibold rounded-3 py-2 btn-dark"
+                  onclick="switchAuthTab('login')">Connexion</button>
+          <button id="tabRegisterBtn" class="btn flex-fill fw-semibold rounded-3 py-2 btn-outline-secondary"
+                  onclick="switchAuthTab('register')">Créer un compte</button>
+        </div>
+        <button class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Fermer"></button>
       </div>
-      <div class="modal-body p-4">
-        <div class="mb-3">
-          <label class="form-label fw-medium">Email</label>
-          <input type="email" class="form-control rounded-3" placeholder="votre@email.com" />
+
+      <!-- Zone alerte -->
+      <div id="authAlert" class="d-none mx-4 mt-3 rounded-3 p-2 small text-center"></div>
+
+      <div class="modal-body px-4 pb-4 pt-3">
+
+        <!-- CONNEXION -->
+        <div id="formLogin">
+          <div class="mb-3">
+            <label class="form-label fw-medium small mb-1">Email</label>
+            <input id="loginEmail" type="email" class="form-control rounded-3 bg-light border-0"
+                   placeholder="votre@email.com" autocomplete="email"
+                   onkeydown="if(event.key==='Enter')submitLogin()" />
+          </div>
+          <div class="mb-1">
+            <label class="form-label fw-medium small mb-1">Mot de passe</label>
+            <div class="input-group">
+              <input id="loginPassword" type="password" class="form-control rounded-start-3 bg-light border-0"
+                     placeholder="••••••••" autocomplete="current-password"
+                     onkeydown="if(event.key==='Enter')submitLogin()" />
+              <button class="btn btn-light border-0 rounded-end-3" type="button"
+                      onclick="togglePwd('loginPassword',this)" tabindex="-1">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="text-end mb-4">
+            <a href="#" class="small text-muted text-decoration-none"
+               onclick="switchAuthTab('forgot');return false;">Mot de passe oublié ?</a>
+          </div>
+          <button class="btn btn-dark w-100 rounded-3 py-2 fw-semibold" onclick="submitLogin()">
+            <span id="loginSpinner" class="spinner-border spinner-border-sm me-2 d-none"></span>
+            Se connecter
+          </button>
         </div>
-        <div class="mb-4">
-          <label class="form-label fw-medium">Mot de passe</label>
-          <input type="password" class="form-control rounded-3" placeholder="••••••••" />
+
+        <!-- INSCRIPTION -->
+        <div id="formRegister" class="d-none">
+          <div class="mb-3">
+            <label class="form-label fw-medium small mb-1">Prénom &amp; Nom</label>
+            <input id="regName" type="text" class="form-control rounded-3 bg-light border-0"
+                   placeholder="Aminata Diallo" autocomplete="name" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium small mb-1">Email</label>
+            <input id="regEmail" type="email" class="form-control rounded-3 bg-light border-0"
+                   placeholder="votre@email.com" autocomplete="email" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium small mb-1">
+              Téléphone <span class="text-muted fw-normal">(optionnel)</span>
+            </label>
+            <input id="regPhone" type="tel" class="form-control rounded-3 bg-light border-0"
+                   placeholder="+221 77 000 00 00" autocomplete="tel" />
+          </div>
+          <div class="mb-2">
+            <label class="form-label fw-medium small mb-1">Mot de passe</label>
+            <div class="input-group">
+              <input id="regPassword" type="password" class="form-control rounded-start-3 bg-light border-0"
+                     placeholder="Min. 6 caractères" autocomplete="new-password"
+                     oninput="checkPwdStrength(this.value)" />
+              <button class="btn btn-light border-0 rounded-end-3" type="button"
+                      onclick="togglePwd('regPassword',this)" tabindex="-1">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <div id="pwdStrength" class="mt-1 d-none">
+              <div class="progress" style="height:4px;border-radius:2px">
+                <div id="pwdBar" class="progress-bar" style="width:0%;transition:width .3s"></div>
+              </div>
+              <small id="pwdLabel" class="text-muted"></small>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium small mb-1">Confirmer le mot de passe</label>
+            <div class="input-group">
+              <input id="regConfirm" type="password" class="form-control rounded-start-3 bg-light border-0"
+                     placeholder="••••••••" autocomplete="new-password"
+                     onkeydown="if(event.key==='Enter')submitRegister()" />
+              <button class="btn btn-light border-0 rounded-end-3" type="button"
+                      onclick="togglePwd('regConfirm',this)" tabindex="-1">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="acceptTerms" />
+            <label class="form-check-label small text-muted" for="acceptTerms">
+              J'accepte les <a href="#" class="text-sengreen text-decoration-none">conditions d'utilisation</a>
+            </label>
+          </div>
+          <button class="btn btn-sengreen w-100 rounded-3 py-2 fw-semibold text-white" onclick="submitRegister()">
+            <span id="regSpinner" class="spinner-border spinner-border-sm me-2 d-none"></span>
+            Créer mon compte
+          </button>
         </div>
-        <button class="btn btn-dark w-100 rounded-3 py-2 fw-semibold mb-3">Se connecter</button>
-        <div class="divider-text text-center text-muted small mb-3">ou</div>
-        <button class="btn btn-sengreen w-100 rounded-3 py-2 fw-semibold">Créer un compte</button>
-        <p class="text-center text-muted small mt-3 mb-0">
-          Vendeur ? <a href="#" class="text-sengreen fw-medium">Espace vendeur →</a>
-        </p>
+
+        <!-- MOT DE PASSE OUBLIÉ -->
+        <div id="formForgot" class="d-none">
+          <p class="text-muted small mb-3">Entrez votre email, nous vous enverrons un lien de réinitialisation.</p>
+          <div class="mb-4">
+            <label class="form-label fw-medium small mb-1">Email</label>
+            <input id="forgotEmail" type="email" class="form-control rounded-3 bg-light border-0"
+                   placeholder="votre@email.com"
+                   onkeydown="if(event.key==='Enter')submitForgot()" />
+          </div>
+          <button class="btn btn-dark w-100 rounded-3 py-2 fw-semibold" onclick="submitForgot()">
+            <span id="forgotSpinner" class="spinner-border spinner-border-sm me-2 d-none"></span>
+            Envoyer le lien
+          </button>
+          <div class="text-center mt-3">
+            <a href="#" class="small text-muted text-decoration-none"
+               onclick="switchAuthTab('login');return false;">← Retour à la connexion</a>
+          </div>
+        </div>
+
+        <!-- VUE CONNECTÉ -->
+        <div id="formUser" class="d-none text-center py-2">
+          <div id="userAvatar"
+               class="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold text-white mb-3"
+               style="width:64px;height:64px;font-size:1.4rem;background:#008751"></div>
+          <p class="fw-semibold mb-1" id="userGreeting"></p>
+          <p class="text-muted small mb-4" id="userEmailDisplay"></p>
+          <button class="btn btn-outline-danger rounded-3 px-4 py-2" onclick="submitLogout()">
+            <i class="bi bi-box-arrow-right me-2"></i>Se déconnecter
+          </button>
+        </div>
+
       </div>
     </div>
   </div>

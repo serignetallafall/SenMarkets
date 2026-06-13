@@ -452,8 +452,222 @@ function showProductDetail(id) {
 }
 
 // ── LOGIN ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
+// AUTHENTIFICATION
+// ══════════════════════════════════════════════════
+
+let currentUser = null;
+
 function openLogin() {
+  switchAuthTab('login');
+  clearAuthAlert();
   new bootstrap.Modal(document.getElementById('loginModal')).show();
+}
+
+function switchAuthTab(tab) {
+  ['Login','Register','Forgot','User'].forEach(t => {
+    const el = document.getElementById('form' + t);
+    if (el) el.classList.toggle('d-none', t.toLowerCase() !== tab);
+  });
+  const btnL = document.getElementById('tabLoginBtn');
+  const btnR = document.getElementById('tabRegisterBtn');
+  const hide = (tab === 'user' || tab === 'forgot');
+  if (btnL) btnL.classList.toggle('d-none', hide);
+  if (btnR) btnR.classList.toggle('d-none', hide);
+  if (!hide && btnL && btnR) {
+    btnL.className = `btn flex-fill fw-semibold rounded-3 py-2 ${tab==='login'    ? 'btn-dark'                  : 'btn-outline-secondary'}`;
+    btnR.className = `btn flex-fill fw-semibold rounded-3 py-2 ${tab==='register' ? 'btn-sengreen text-white'    : 'btn-outline-secondary'}`;
+  }
+  clearAuthAlert();
+}
+
+function showAuthAlert(msg, type = 'danger') {
+  const el = document.getElementById('authAlert');
+  if (!el) return;
+  el.className = `rounded-3 p-2 small text-center alert alert-${type}`;
+  el.textContent = msg;
+}
+function clearAuthAlert() {
+  const el = document.getElementById('authAlert');
+  if (el) { el.className = 'd-none'; el.textContent = ''; }
+}
+function setLoading(id, state) {
+  document.getElementById(id)?.classList.toggle('d-none', !state);
+}
+function togglePwd(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const icon  = btn.querySelector('i');
+  if (!input) return;
+  input.type = input.type === 'password' ? 'text' : 'password';
+  if (icon) icon.className = input.type === 'text' ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+function checkPwdStrength(val) {
+  const bar = document.getElementById('pwdBar');
+  const lbl = document.getElementById('pwdLabel');
+  const wrap = document.getElementById('pwdStrength');
+  if (!bar) return;
+  if (!val) { wrap?.classList.add('d-none'); return; }
+  wrap?.classList.remove('d-none');
+  let s = 0;
+  if (val.length >= 6) s++;
+  if (val.length >= 10) s++;
+  if (/[A-Z]/.test(val)) s++;
+  if (/[0-9]/.test(val)) s++;
+  if (/[^A-Za-z0-9]/.test(val)) s++;
+  const L = [
+    {pct:'20%',cls:'bg-danger', txt:'Très faible'},
+    {pct:'40%',cls:'bg-warning',txt:'Faible'},
+    {pct:'60%',cls:'bg-info',   txt:'Moyen'},
+    {pct:'80%',cls:'bg-primary',txt:'Fort'},
+    {pct:'100%',cls:'bg-success',txt:'Très fort'},
+  ][Math.min(s,4)];
+  bar.style.width = L.pct;
+  bar.className = `progress-bar ${L.cls}`;
+  if (lbl) lbl.textContent = L.txt;
+}
+
+function applyUser(user) {
+  currentUser = user;
+  console.log('applyUser reçu :', user); // debug
+
+  // Icône de la navbar
+  const icon = document.querySelector('[onclick="openLogin()"] i');
+  if (icon) icon.className = 'bi bi-person-circle text-sengreen';
+
+  // Initiales
+  let initials = '?';
+  if (user.name && typeof user.name === 'string') {
+    initials = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+  }
+  const av = document.getElementById('userAvatar');
+  if (av) {
+    av.innerHTML = initials;
+    av.style.background = '#008751';
+    av.style.display = 'inline-flex';
+    av.style.alignItems = 'center';
+    av.style.justifyContent = 'center';
+    av.style.fontSize = '1.4rem';
+  }
+
+  const gr = document.getElementById('userGreeting');
+  if (gr) gr.textContent = `Bonjour, ${user.name} 👋`;
+  const em = document.getElementById('userEmailDisplay');
+  if (em) em.textContent = user.email;
+
+  // FORCER l’affichage du bloc utilisateur (sans passer par switchAuthTab)
+  document.getElementById('formLogin')?.classList.add('d-none');
+  document.getElementById('formRegister')?.classList.add('d-none');
+  document.getElementById('formForgot')?.classList.add('d-none');
+  document.getElementById('formUser')?.classList.remove('d-none');
+
+  // Cacher les onglets Connexion / Inscription
+  const btnL = document.getElementById('tabLoginBtn');
+  const btnR = document.getElementById('tabRegisterBtn');
+  if (btnL) btnL.classList.add('d-none');
+  if (btnR) btnR.classList.add('d-none');
+
+  clearAuthAlert();
+}
+function clearUser() {
+  currentUser = null;
+  const icon = document.querySelector('[onclick="openLogin()"] i');
+  if (icon) icon.className = 'bi bi-person-circle';
+  switchAuthTab('login');
+}
+
+async function submitLogin() {
+  const email    = document.getElementById('loginEmail')?.value.trim();
+  const password = document.getElementById('loginPassword')?.value;
+  if (!email || !password) return showAuthAlert('Veuillez remplir tous les champs.');
+  setLoading('loginSpinner', true); clearAuthAlert();
+  try {
+    const r = await fetch('auth.php', {
+      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:`action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    });
+    const d = await r.json();
+    if (d.success) {
+      applyUser(d.user);
+      showToast(`Bienvenue, ${d.user.name} !`, 'success');
+      setTimeout(()=>bootstrap.Modal.getInstance(document.getElementById('loginModal'))?.hide(), 700);
+    } else { showAuthAlert(d.message || 'Email ou mot de passe incorrect.'); }
+  } catch (e) {
+    // Try to get more info about the error
+    try {
+      const r2 = await fetch('auth.php?action=me');
+      const txt = await r2.text();
+      if (txt.startsWith('{')) {
+        showAuthAlert('auth.php répond mais login a échoué. Vérifiez la console (F12).');
+      } else {
+        showAuthAlert('Erreur PHP : ' + txt.substring(0, 120));
+      }
+    } catch {
+      showAuthAlert('auth.php inaccessible. Vérifiez que le fichier existe dans htdocs/SenMarkets/');
+    }
+  }
+  setLoading('loginSpinner', false);
+}
+
+async function submitRegister() {
+  const name     = document.getElementById('regName')?.value.trim();
+  const email    = document.getElementById('regEmail')?.value.trim();
+  const phone    = document.getElementById('regPhone')?.value.trim();
+  const password = document.getElementById('regPassword')?.value;
+  const confirm  = document.getElementById('regConfirm')?.value;
+  const terms    = document.getElementById('acceptTerms')?.checked;
+  if (!name || !email || !password || !confirm) return showAuthAlert('Veuillez remplir tous les champs obligatoires.');
+  if (password !== confirm) return showAuthAlert('Les mots de passe ne correspondent pas.');
+  if (password.length < 6) return showAuthAlert('Le mot de passe doit contenir au moins 6 caractères.');
+  if (!terms) return showAuthAlert("Veuillez accepter les conditions d'utilisation.");
+  setLoading('regSpinner', true); clearAuthAlert();
+  try {
+    const r = await fetch('auth.php', {
+      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:`action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone||'')}&password=${encodeURIComponent(password)}&confirm=${encodeURIComponent(confirm)}`
+    });
+    const d = await r.json();
+    if (d.success) {
+      applyUser(d.user);
+      showToast(`Compte créé ! Bienvenue, ${d.user.name} !`, 'success');
+      setTimeout(()=>bootstrap.Modal.getInstance(document.getElementById('loginModal'))?.hide(), 700);
+    } else { showAuthAlert(d.message || 'Erreur lors de la création du compte.'); }
+  } catch (e) {
+    try {
+      const r2 = await fetch('auth.php?action=me');
+      const txt = await r2.text();
+      showAuthAlert('Erreur PHP: ' + txt.substring(0, 120));
+    } catch {
+      showAuthAlert('auth.php inaccessible. Vérifiez que le fichier existe dans htdocs/SenMarkets/');
+    }
+  }
+  setLoading('regSpinner', false);
+}
+
+async function submitLogout() {
+  await fetch('auth.php', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=logout'}).catch(()=>{});
+  clearUser();
+  bootstrap.Modal.getInstance(document.getElementById('loginModal'))?.hide();
+  showToast('Vous êtes déconnecté.', 'success');
+}
+
+async function submitForgot() {
+  const email = document.getElementById('forgotEmail')?.value.trim();
+  if (!email) return showAuthAlert('Veuillez entrer votre adresse email.');
+  setLoading('forgotSpinner', true); clearAuthAlert();
+  try {
+    const r = await fetch('auth.php', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`action=forgot&email=${encodeURIComponent(email)}`});
+    const d = await r.json();
+    showAuthAlert(d.message || 'Email envoyé si le compte existe.', 'success');
+  } catch { showAuthAlert('Erreur réseau.'); }
+  setLoading('forgotSpinner', false);
+}
+
+async function checkAuthSession() {
+  try {
+    const r = await fetch('auth.php?action=me');
+    const d = await r.json();
+    if (d.loggedIn && d.user) applyUser(d.user);
+  } catch {}
 }
 
 // ── NEWSLETTER ────────────────────────────────────────────────
@@ -509,4 +723,5 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   renderHomeProducts();
   syncCartFromServer();
+  checkAuthSession();
 });

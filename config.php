@@ -26,6 +26,4 @@ define('APP_URL',  'http://localhost');
 define('APP_NAME', 'SenMarket');
 
 // ── Session ──────────────────────────────────────────────────
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// session_start() est géré par chaque fichier PHP individuellement
