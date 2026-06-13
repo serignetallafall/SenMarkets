@@ -459,7 +459,7 @@ function showProductDetail(id) {
 let currentUser = null;
 
 function openLogin() {
-  switchAuthTab('login');
+  switchAuthTab(currentUser ? 'user' : 'login');
   clearAuthAlert();
   new bootstrap.Modal(document.getElementById('loginModal')).show();
 }
@@ -528,50 +528,30 @@ function checkPwdStrength(val) {
 
 function applyUser(user) {
   currentUser = user;
-  console.log('applyUser reçu :', user); // debug
+  const initials = (user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
 
-  // Icône de la navbar
-  const icon = document.querySelector('[onclick="openLogin()"] i');
-  if (icon) icon.className = 'bi bi-person-circle text-sengreen';
+  // Header : masquer icône, afficher initiales dans bulle verte
+  const headerIcon     = document.getElementById('headerAuthIcon');
+  const headerInitials = document.getElementById('headerAuthInitials');
+  if (headerIcon)     { headerIcon.classList.add('d-none'); }
+  if (headerInitials) { headerInitials.textContent = initials; headerInitials.classList.remove('d-none'); headerInitials.style.display='flex'; }
 
-  // Initiales
-  let initials = '?';
-  if (user.name && typeof user.name === 'string') {
-    initials = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-  }
+  // Modal vue connecté
   const av = document.getElementById('userAvatar');
-  if (av) {
-    av.innerHTML = initials;
-    av.style.background = '#008751';
-    av.style.display = 'inline-flex';
-    av.style.alignItems = 'center';
-    av.style.justifyContent = 'center';
-    av.style.fontSize = '1.4rem';
-  }
-
   const gr = document.getElementById('userGreeting');
-  if (gr) gr.textContent = `Bonjour, ${user.name} 👋`;
   const em = document.getElementById('userEmailDisplay');
+  if (av) av.textContent = initials;
+  if (gr) gr.textContent = `Bonjour, ${user.name} 👋`;
   if (em) em.textContent = user.email;
-
-  // FORCER l’affichage du bloc utilisateur (sans passer par switchAuthTab)
-  document.getElementById('formLogin')?.classList.add('d-none');
-  document.getElementById('formRegister')?.classList.add('d-none');
-  document.getElementById('formForgot')?.classList.add('d-none');
-  document.getElementById('formUser')?.classList.remove('d-none');
-
-  // Cacher les onglets Connexion / Inscription
-  const btnL = document.getElementById('tabLoginBtn');
-  const btnR = document.getElementById('tabRegisterBtn');
-  if (btnL) btnL.classList.add('d-none');
-  if (btnR) btnR.classList.add('d-none');
-
-  clearAuthAlert();
+  switchAuthTab('user');
 }
 function clearUser() {
   currentUser = null;
-  const icon = document.querySelector('[onclick="openLogin()"] i');
-  if (icon) icon.className = 'bi bi-person-circle';
+  // Header : restaurer icône
+  const headerIcon     = document.getElementById('headerAuthIcon');
+  const headerInitials = document.getElementById('headerAuthInitials');
+  if (headerIcon)     { headerIcon.classList.remove('d-none'); }
+  if (headerInitials) { headerInitials.classList.add('d-none'); headerInitials.style.display='none'; }
   switchAuthTab('login');
 }
 
@@ -697,31 +677,60 @@ function showToast(msg, type = '') {
 }
 
 // ── HERO SLIDER ───────────────────────────────────────────────
-let heroSlide = 0;
-const heroBgs = [
-  'linear-gradient(135deg, #1a3a2a 0%, #0f2419 40%, #2a1a00 100%)',
-  'linear-gradient(135deg, #1a1a3a 0%, #0f0f2a 40%, #2a1a1a 100%)',
-  'linear-gradient(135deg, #3a1a0f 0%, #2a0f0f 40%, #1a1a1a 100%)',
+const HERO_SLIDES = [
+  {
+    title: `<span class="text-sengreen">L'Artisanat</span><br><span class="text-yellow">Sénégalais</span><br><span class="text-danger">Authentique</span>`,
+    sub:   'Découvrez des créations uniques façonnées par des artisans talentueux du Sénégal.'
+  },
+  {
+    title: `<span class="text-yellow">Cosmétiques</span><br><span class="text-white">Naturels</span><br><span class="text-sengreen">du Sénégal</span>`,
+    sub:   'Karité, argan, savons artisanaux — les secrets de beauté de nos grand-mères.'
+  },
+  {
+    title: `<span class="text-white">Fier</span><br><span class="text-yellow">d'être</span><br><span class="text-sengreen">Sénégalais</span>`,
+    sub:   'SenMarket célèbre le savoir-faire et la culture du Sénégal à travers chaque produit.'
+  },
 ];
-function advanceHero() {
-  heroSlide = (heroSlide + 1) % 3;
-  const banner = document.querySelector('.hero-banner');
-  if (banner) banner.style.background = heroBgs[heroSlide];
-  document.querySelectorAll('.hero-dot').forEach((d, i) => {
-    d.classList.toggle('hero-dot--active', i === heroSlide);
-  });
+
+let heroIdx      = 0;
+let heroInterval = null;
+
+function heroGo(dir, target) {
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots   = document.querySelectorAll('.hero-dot');
+
+  // Retirer l'état actif de l'ancienne slide
+  slides[heroIdx]?.classList.remove('active');
+  dots[heroIdx]?.classList.remove('hero-dot--active');
+
+  // Calculer l'index cible
+  if (target !== undefined) {
+    heroIdx = target;
+  } else {
+    heroIdx = (heroIdx + dir + HERO_SLIDES.length) % HERO_SLIDES.length;
+  }
+
+  // Activer la nouvelle slide
+  slides[heroIdx]?.classList.add('active');
+  dots[heroIdx]?.classList.add('hero-dot--active');
+
+  // Mettre à jour le texte
+  const titleEl = document.getElementById('heroTitle');
+  const subEl   = document.getElementById('heroSub');
+  if (titleEl) titleEl.innerHTML = HERO_SLIDES[heroIdx].title;
+  if (subEl)   subEl.textContent = HERO_SLIDES[heroIdx].sub;
 }
-let heroInterval = setInterval(advanceHero, 4000);
-document.addEventListener('DOMContentLoaded', () => {
-  const next = document.getElementById('heroNext');
-  const prev = document.getElementById('heroPrev');
-  if (next) { next.addEventListener('click', () => { clearInterval(heroInterval); advanceHero(); heroInterval = setInterval(advanceHero, 4000); }); }
-  if (prev) { prev.addEventListener('click', () => { clearInterval(heroInterval); heroSlide = (heroSlide - 2 + 3) % 3; advanceHero(); heroInterval = setInterval(advanceHero, 4000); }); }
-});
+
+function startHeroAuto() {
+  if (heroInterval) clearInterval(heroInterval);
+  heroInterval = setInterval(() => heroGo(1), 5000);
+}
+
 
 // ── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   renderHomeProducts();
   syncCartFromServer();
   checkAuthSession();
+  startHeroAuto();
 });

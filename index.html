@@ -43,7 +43,11 @@
     <!-- Icons -->
     <div class="d-flex align-items-center gap-2">
       <button class="icon-btn" onclick="showPage('boutique')"><i class="bi bi-search"></i></button>
-      <button class="icon-btn" onclick="openLogin()"><i class="bi bi-person-circle"></i></button>
+      <button class="icon-btn position-relative" id="headerAuthBtn" onclick="openLogin()" title="Mon compte">
+        <i class="bi bi-person-circle" id="headerAuthIcon"></i>
+        <span id="headerAuthInitials" class="d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center fw-bold text-white rounded-circle"
+              style="font-size:0.7rem;background:#008751;line-height:1"></span>
+      </button>
       <button class="icon-btn position-relative" onclick="openCart()">
         <i class="bi bi-bag"></i>
         <span class="cart-badge" id="cartCount">0</span>
@@ -257,29 +261,39 @@
     <div class="container-xxl">
       
       <div class="hero-banner position-relative rounded-4 overflow-hidden">
-        
-        <div class="hero-bg-gradient">
-          
+
+        <!-- Slides images -->
+        <div class="hero-slides">
+          <div class="hero-slide active" style="background-image:url('images/hero_artisanat.jpg')"></div>
+          <div class="hero-slide"        style="background-image:url('images/hero_cosmetiques.jpg')"></div>
+          <div class="hero-slide"        style="background-image:url('images/hero_drapeau.jpg')"></div>
         </div>
-        <div class="hero-pattern">
-  <div class="hero-content position-absolute bottom-0 start-0 p-4 p-md-5 text-white" style="max-width:560px">
-          <h1 class="hero-title display-4 fw-medium mb-3">
-            <span class="text-sengreen">L'Artisanat</span><br />
-           
-            <span class="text-yellow">Sénégalais</span><br />
-            <span class="text-danger">Authentique<span><br />
+
+        <!-- Overlay sombre pour lisibilité du texte -->
+        <div class="hero-bg-gradient"></div>
+
+        <!-- Contenu dynamique par slide -->
+        <div class="hero-content position-absolute bottom-0 start-0 p-4 p-md-5 text-white" style="max-width:600px;z-index:3">
+          <h1 class="hero-title display-4 fw-medium mb-3" id="heroTitle">
+            <span class="text-sengreen">L'Artisanat</span><br>
+            <span class="text-yellow">Sénégalais</span><br>
+            <span class="text-danger">Authentique</span>
           </h1>
-          <p class="hero-sub mb-4">Découvrez des créations uniques façonnées par des artisans talentueux du Sénégal.</p>
+          <p class="hero-sub mb-4" id="heroSub">Découvrez des créations uniques façonnées par des artisans talentueux du Sénégal.</p>
           <button class="btn btn-light fw-semibold px-4 py-2 rounded-3" onclick="showPage('boutique')">Explorer la boutique</button>
         </div>
+
+        <!-- Flèches navigation -->
+        <button class="hero-arrow hero-arrow--prev" onclick="heroGo(-1)" aria-label="Précédent">&#8249;</button>
+        <button class="hero-arrow hero-arrow--next" onclick="heroGo(1)"  aria-label="Suivant">&#8250;</button>
+
+        <!-- Dots -->
+        <div class="hero-dots position-absolute bottom-0 start-50 translate-middle-x mb-4 d-flex gap-2" id="heroDots">
+          <div class="hero-dot hero-dot--active" onclick="heroGo(0, 0)"></div>
+          <div class="hero-dot"                  onclick="heroGo(0, 1)"></div>
+          <div class="hero-dot"                  onclick="heroGo(0, 2)"></div>
         </div>
-      
-     
-        <div class="hero-dots position-absolute bottom-0 start-50 translate-middle-x mb-4 d-flex gap-2">
-          <div class="hero-dot hero-dot--active"></div>
-          <div class="hero-dot"></div>
-          <div class="hero-dot"></div>
-        </div>
+
       </div>
 
       <div class="row mt-5 g-4 align-items-start">
