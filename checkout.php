@@ -559,7 +559,7 @@ foreach ($cart as $item) {
             $payments = [
               'orange_money' => ['img'=>'images/orange_money.png',  'label'=>'Orange Money',           'sub'=>'Paiement mobile sécurisé', 'bg'=>'#FF6600'],
               'wave'         => ['img'=>'images/wave.png',          'label'=>'Wave',                   'sub'=>'Transfert instantané',     'bg'=>'#00BFFF'],
-              'card'         => ['img'=>'images/carte_bancaire.webp','label'=>'Carte bancaire',          'sub'=>'Visa, Mastercard',         'bg'=>'#2D3748'],
+              'card'         => ['img'=>'images/carte_bancaire.png','label'=>'Carte bancaire',          'sub'=>'Visa, Mastercard',         'bg'=>'#2D3748'],
               'cash'         => ['img'=>'images/livraison.jpeg',    'label'=>'Paiement à la livraison','sub'=>'Sénégal uniquement',        'bg'=>'#008751'],
             ];
             foreach ($payments as $value => $p):
