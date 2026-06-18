@@ -536,10 +536,6 @@ foreach ($cart as $item) {
               <select name="shipping_country" class="form-select" id="countrySelect">
                 <option value="Sénégal" selected>Sénégal 🇸🇳</option>
                 <option value="France">France</option>
-                <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                <option value="Mali">Mali</option>
-                <option value="Mauritanie">Mauritanie</option>
-                <option value="Niger">Niger</option>
               </select>
             </div>
             <div class="col-12">
