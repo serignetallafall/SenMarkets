@@ -1,6 +1,5 @@
 <?php
-// config.php — SenMarket
-// Placez ce fichier à la racine, en dehors du dossier public si possible
+
 
 define('DB_HOST',     '127.0.0.1');
 define('DB_PORT',     '3306');
