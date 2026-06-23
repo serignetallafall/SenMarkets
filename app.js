@@ -6,18 +6,18 @@
 
 // ── DATA ──────────────────────────────────────────────────────
 const PRODUCTS = [
-  { id:1,  name:"Panier Tressé Traditionnel",  category:"Artisanat",    price:15000, originalPrice:25000, discount:"-40%", rating:5, reviews:128, artisan:"Aminata D.", isNew:true,  image:"images/Artisanat/Panier_tressé.jpg" },
-  { id:2,  name:"Bijoux en Perles Artisanaux",  category:"Artisanat",    price:8500,                                        rating:4, reviews:89,  artisan:"Fatou S.",   isNew:true,  image:"images/Artisanat/Bijoux_en_perle.jpg" },
-  { id:3,  name:"Beurre de Karité Pur",          category:"Cosmétiques",  price:12000, originalPrice:16000, discount:"-25%", rating:5, reviews:203, artisan:"Mariama B.",             image:"images/Cosmétiques/Beurre_de_karité.jpg" },
-  { id:4,  name:"Tissu Wax Premium",             category:"Artisanat",    price:18000,                                        rating:4, reviews:67,  artisan:"Oumar T.",   isNew:true,  image:"images/Artisanat/Tissu_wax.jpg"},
-  { id:5,  name:"Épices Thiéboudienne",          category:"Alimentaire",  price:4500,                                         rating:5, reviews:156, artisan:"Rokhaya N.",              image:"images/Alimentaire/Epices_thiéboudienne.jpg"},
-  { id:6,  name:"Huile d'Argan Artisanale",      category:"Cosmétiques",  price:9800,  originalPrice:13000, discount:"-25%", rating:4, reviews:94,  artisan:"Aissatou D.",             image:"images/Cosmétiques/Huile_d'argan_artisanale.jpg"},
-  { id:7,  name:"Chapeau Tressé Baobab",         category:"Artisanat",    price:7200,                                         rating:5, reviews:45,  artisan:"Ibrahima S.",             image:"images/Artisanat/Chapeau_tressé.jpg" },
-  { id:8,  name:"Mélange d'Épices Yassa",        category:"Alimentaire",  price:3200,                                         rating:4, reviews:78,  artisan:"Ndèye F.",                image:"images/Alimentaire/mélange_d'épices_yassa.jpg"},
-  { id:9,  name:"Savon au Lait de Karité",       category:"Cosmétiques",  price:2800,                                         rating:5, reviews:312, artisan:"Coumba M.", isNew:true,   image:"images/Cosmétiques/Savon_au_lait_de_karité.jpg"},
-  { id:10, name:"Bogolan Tissu Authentique",     category:"Artisanat",    price:22000,                                        rating:5, reviews:38,  artisan:"Moussa K.",               image:"images/Artisanat/Bogolan_tissu.jpg"},
+  { id:1,  name:"Panier Tressé Traditionnel",  category:"Artisanat",    price:15000, originalPrice:25000, discount:"-40%", rating:5, reviews:128, artisan:"Aminata D.", isNew:true,  image:"images/Artisanat/panier_tresse.jpg" },
+  { id:2,  name:"Bijoux en Perles Artisanaux",  category:"Artisanat",    price:8500,                                        rating:4, reviews:89,  artisan:"Fatou S.",   isNew:true,  image:"images/Artisanat/bijoux_en_perle.jpg" },
+  { id:3,  name:"Beurre de Karité Pur",          category:"Cosmétiques",  price:12000, originalPrice:16000, discount:"-25%", rating:5, reviews:203, artisan:"Mariama B.",             image:"images/Cosmétiques/beurre_de_karite.jpg" },
+  { id:4,  name:"Tissu Wax Premium",             category:"Artisanat",    price:18000,                                        rating:4, reviews:67,  artisan:"Oumar T.",   isNew:true,  image:"images/Artisanat/tissu_wax.jpg"},
+  { id:5,  name:"Épices Thiéboudienne",          category:"Alimentaire",  price:4500,                                         rating:5, reviews:156, artisan:"Rokhaya N.",              image:"images/Alimentaire/epices_thieboudienne.jpg"},
+  { id:6,  name:"Huile d'Argan Artisanale",      category:"Cosmétiques",  price:9800,  originalPrice:13000, discount:"-25%", rating:4, reviews:94,  artisan:"Aissatou D.",             image:"images/Cosmétiques/huile_argan_artisanale.jpg"},
+  { id:7,  name:"Chapeau Tressé Baobab",         category:"Artisanat",    price:7200,                                         rating:5, reviews:45,  artisan:"Ibrahima S.",             image:"images/Artisanat/chapeau_tresse.jpg" },
+  { id:8,  name:"Mélange d'Épices Yassa",        category:"Alimentaire",  price:3200,                                         rating:4, reviews:78,  artisan:"Ndèye F.",                image:"images/Alimentaire/melange_epices_yassa.jpg"},
+  { id:9,  name:"Savon au Lait de Karité",       category:"Cosmétiques",  price:2800,                                         rating:5, reviews:312, artisan:"Coumba M.", isNew:true,   image:"images/Cosmétiques/savon_au_lait_de_karite.jpg"},
+  { id:10, name:"Bogolan Tissu Authentique",     category:"Artisanat",    price:22000,                                        rating:5, reviews:38,  artisan:"Moussa K.",               image:"images/Artisanat/bogolan_tissu.jpg"},
   { id:11, name:"Jus de Bissap Premium",         category:"Alimentaire",  price:3500,                                         rating:4, reviews:167, artisan:"Soda T.",                 image:"images/Alimentaire/Jus_bissap.jpg" },
-  { id:12, name:"Collier Cauris Traditionnel",   category:"Artisanat",    price:6500,  originalPrice:9000,  discount:"-28%", rating:5, reviews:52,  artisan:"Khadija B.",              image:"images/Artisanat/Collier_cauris.jpg"},
+  { id:12, name:"Collier Cauris Traditionnel",   category:"Artisanat",    price:6500,  originalPrice:9000,  discount:"-28%", rating:5, reviews:52,  artisan:"Khadija B.",              image:"images/Artisanat/collier_cauris.jpg"},
 ];
 
 const ARTISANS = [

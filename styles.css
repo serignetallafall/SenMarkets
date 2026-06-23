@@ -145,7 +145,7 @@ h1, h2, h3, h4, h5, .logo-text, .hero-title { font-family: 'Poppins', sans-serif
 .cat-card:hover .cat-bg { transform: scale(1.06); }
 .cat-bg--1 { background-image: url(images/artisanat.jpg);}
 .cat-bg--2 { background-image: url(images/alimentaire.jpg); }
-.cat-bg--3 { background-image: url(images/cosmétiques.jpg);  }
+.cat-bg--3 { background-image: url(images/cosmetiques.jpg);  }
 .cat-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.55), transparent); }
 .cat-content { z-index: 1; }
 .cat-btn {
