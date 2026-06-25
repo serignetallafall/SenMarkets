@@ -105,7 +105,7 @@ if ($action === 'logout') {
 }
 
 if ($action === 'forgot') {
-    ok(['message'=>'Si ce compte existe, un email vous a été envoyé.']);
+    ok(['message'=>'Un email vous a été envoyé.']);
 }
 
 err("Action inconnue: '$action'");
