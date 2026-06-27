@@ -16,7 +16,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
     exit;
 });
 
-// ── DB (lit config.php si présent) ───────────────────────────
+
 $_db = null;
 function getDb(): PDO {
     global $_db;
@@ -60,7 +60,7 @@ function err(string $msg, int $code = 400): void {
     echo json_encode(['success'=>false,'message'=>$msg]); exit;
 }
 
-// ── Router ────────────────────────────────────────────────────
+
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 switch ($action) {
